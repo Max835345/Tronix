@@ -10,7 +10,12 @@ x = W // 2
 y = H // 2
 r = 20
 
-# Случайные скорости по осям x и y
+paddle_width = 100
+paddle_height = 20
+paddle_x = W // 2 - paddle_width // 2
+paddle_y = H - paddle_height - 10
+paddle_speed = 10
+
 vx = random.randint(-5, 5)
 vy = random.randint(-5, 5)
 
@@ -20,33 +25,44 @@ pygame.display.set_caption('Tronix')
 
 while True:
     root.fill((255, 255, 255))
-
-    # Рисуем шарик
     pygame.draw.circle(root, (0, 70, 225), (x, y), r)
+    paddle_rect = pygame.draw.rect(root, (0, 0, 0), (paddle_x, paddle_y, paddle_width, paddle_height))
 
-    # Изменяем положение шарика
     x += vx
     y += vy
 
-    # Проверяем столкновение с границами экрана и меняем направление движения случайным образом
     if x - r <= 0 or x + r >= W:
         vx = random.randint(-5, 5)
-        while vx == 0:  # Обеспечиваем, что скорость не будет равна 0
+
+        while vx == 0:
             vx = random.randint(-5, 5)
 
-    if y - r <= 0 or y + r >= H:
+    if y - r <= 0:
         vy = random.randint(-5, 5)
-        while vy == 0:  # Обеспечиваем, что скорость не будет равна 0
+
+        while vy == 0:
             vy = random.randint(-5, 5)
 
-    # Обновляем экран
+    if paddle_rect.collidepoint(x, y + r):
+        vy = -random.randint(1, 5)
+
+    if y - r >= H:
+        x = W // 2
+        y = H // 2
+        vx = random.randint(-5, 5)
+        vy = random.randint(-5, 5)
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_LEFT] and paddle_x > 0:
+        paddle_x -= paddle_speed
+
+    if keys[pygame.K_RIGHT] and paddle_x < W - paddle_width:
+        paddle_x += paddle_speed
     pygame.display.update()
 
-    # Проверяем события
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
             pygame.quit()
             exit()
 
-    # Ограничиваем FPS
     clock.tick(FPS)
