@@ -3,6 +3,8 @@ import random
 
 pygame.init()
 
+lives = 3
+
 W = 500
 H = 500
 FPS = 60
@@ -18,43 +20,46 @@ paddle_speed = 10
 
 list_of_blocks = [
     pygame.Rect(45, 100, 50, 15),
-    pygame.Rect(100, 100, 50, 15),
-    pygame.Rect(155, 100, 50, 15),
-    pygame.Rect(210, 100, 50, 15),
-    pygame.Rect(265, 100, 50, 15),
-    pygame.Rect(320, 100, 50, 15),
-    pygame.Rect(375, 100, 50, 15),
-    pygame.Rect(430, 100, 50, 15),
-    pygame.Rect(45, 120, 50, 15),
-    pygame.Rect(100, 120, 50, 15),
-    pygame.Rect(155, 120, 50, 15),
-    pygame.Rect(210, 120, 50, 15),
-    pygame.Rect(265, 120, 50, 15),
-    pygame.Rect(320, 120, 50, 15),
-    pygame.Rect(375, 120, 50, 15),
-    pygame.Rect(430, 120, 50, 15),
-    pygame.Rect(45, 140, 50, 15),
-    pygame.Rect(100, 140, 50, 15),
-    pygame.Rect(155, 140, 50, 15),
-    pygame.Rect(210, 140, 50, 15),
-    pygame.Rect(265, 140, 50, 15),
-    pygame.Rect(320, 140, 50, 15),
-    pygame.Rect(375, 140, 50, 15),
-    pygame.Rect(430, 140, 50, 15),
-    pygame.Rect(45, 160, 50, 15),
-    pygame.Rect(100, 160, 50, 15),
-    pygame.Rect(155, 160, 50, 15),
-    pygame.Rect(210, 160, 50, 15),
-    pygame.Rect(265, 160, 50, 15),
-    pygame.Rect(320, 160, 50, 15),
-    pygame.Rect(375, 160, 50, 15),
-    pygame.Rect(430, 160, 50, 15),
+    # pygame.Rect(100, 100, 50, 15),
+    # pygame.Rect(155, 100, 50, 15),
+    # pygame.Rect(210, 100, 50, 15),
+    # pygame.Rect(265, 100, 50, 15),
+    # pygame.Rect(320, 100, 50, 15),
+    # pygame.Rect(375, 100, 50, 15),
+    # pygame.Rect(430, 100, 50, 15),
+    # pygame.Rect(45, 120, 50, 15),
+    # pygame.Rect(100, 120, 50, 15),
+    # pygame.Rect(155, 120, 50, 15),
+    # pygame.Rect(210, 120, 50, 15),
+    # pygame.Rect(265, 120, 50, 15),
+    # pygame.Rect(320, 120, 50, 15),
+    # pygame.Rect(375, 120, 50, 15),
+    # pygame.Rect(430, 120, 50, 15),
+    # pygame.Rect(45, 140, 50, 15),
+    # pygame.Rect(100, 140, 50, 15),
+    # pygame.Rect(155, 140, 50, 15),
+    # pygame.Rect(210, 140, 50, 15),
+    # pygame.Rect(265, 140, 50, 15),
+    # pygame.Rect(320, 140, 50, 15),
+    # pygame.Rect(375, 140, 50, 15),
+    # pygame.Rect(430, 140, 50, 15),
+    # pygame.Rect(45, 160, 50, 15),
+    # pygame.Rect(100, 160, 50, 15),
+    # pygame.Rect(155, 160, 50, 15),
+    # pygame.Rect(210, 160, 50, 15),
+    # pygame.Rect(265, 160, 50, 15),
+    # pygame.Rect(320, 160, 50, 15),
+    # pygame.Rect(375, 160, 50, 15),
+    # pygame.Rect(430, 160, 50, 15),
 ]
 
 vx = random.randint(-5, 5)
 vy = random.randint(-5, 5)
 
 root = pygame.display.set_mode((W, H))
+f1 = pygame.font.Font(None, 36)
+text1 = f1.render('ПОБЕДА', 1, (180, 0, 0))
+text2 = f1.render('ВЫ ПРОИГРАЛИ', 1, (180, 0, 0))
 clock = pygame.time.Clock()
 pygame.display.set_caption('Tronix')
 
@@ -64,9 +69,15 @@ while True:
     paddle_rect = pygame.draw.rect(root, (0, 0, 0), (paddle_x, paddle_y, paddle_width, paddle_height))
 
     for block in list_of_blocks:
-        pygame.draw.rect(root, (0, 0, 0), block)
+        pygame.draw.rect(root, (0, 200, 0), block)
 
     pygame.display.update()
+
+    if len(list_of_blocks) == 0:
+        root.fill((255, 255, 255))
+        root.blit(text1, (200, 250))
+        pygame.display.update()
+        pygame.time.wait(3000)
 
     x += vx
     y += vy
@@ -98,6 +109,7 @@ while True:
 
     if keys[pygame.K_RIGHT] and paddle_x < W - paddle_width:
         paddle_x += paddle_speed
+
     pygame.display.update()
 
     ball_rect = pygame.Rect(x - r, y - r, r * 2, r * 2)
@@ -105,7 +117,6 @@ while True:
         if ball_rect.colliderect(block):
             list_of_blocks.remove(block)
             vy = -vy
-            break
 
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
