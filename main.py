@@ -54,6 +54,7 @@ list_of_blocks = [
     pygame.Rect(430, 160, 50, 15),
 ]
 
+
 vx = random.randint(-5, 5)
 vy = random.randint(-5, 5)
 
